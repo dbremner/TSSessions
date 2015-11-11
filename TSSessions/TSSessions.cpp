@@ -134,7 +134,7 @@ void ShowObjectSecurity(HANDLE hObj)
 
 BOOL  __stdcall EnumDesktopProc(
    LPSTR lpszDesktop,
-   DWORD lParam
+   LPARAM lParam
 )
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -162,7 +162,7 @@ BOOL  __stdcall EnumDesktopProc(
 
 BOOL  __stdcall EnumWindowStationProc(
    LPSTR lpszWindowStation,
-   DWORD lParam
+   LPARAM lParam
 )
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -188,7 +188,7 @@ BOOL  __stdcall EnumWindowStationProc(
 		unique_hwinsta hWS_save{ GetProcessWindowStation() };
 		if ( SetProcessWindowStation(hWS.get()) )
 		{
-			BOOL bEDret = EnumDesktops(hWS.get(), (DESKTOPENUMPROCA)EnumDesktopProc, 0);
+			BOOL bEDret = EnumDesktops(hWS.get(), EnumDesktopProc, 0);
 			if ( ! bEDret )
 			{
 				ShowError("\tEnumDesktops");
@@ -481,7 +481,7 @@ void main(int argc, char** argv)
 
 	cout << endl
 		<< "Window stations in the current session:" << endl;
-	if ( ! EnumWindowStations((WINSTAENUMPROCA)EnumWindowStationProc, 0) )
+	if ( ! EnumWindowStations(EnumWindowStationProc, 0) )
 	{
 		ShowError("EnumWindowStations");
 	}
