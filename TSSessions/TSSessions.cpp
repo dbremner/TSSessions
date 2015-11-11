@@ -12,6 +12,9 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 
 #include "stdafx.h"
 
+using CLocalHeapPtr = CHeapPtr<char, CLocalAllocator>;
+using CWTSHeapPtr = CHeapPtr<char, CWTSAllocator>;
+
 bool bShowSD = true;
 
 
@@ -50,11 +53,10 @@ bool SidToString(const PSID pSid, string & sSid, string & sError)
 	sSid.clear();
 	sError.clear();
 
-	LPSTR pStrSid = NULL;
+	CLocalHeapPtr pStrSid;
 	if (ConvertSidToStringSidA(pSid, &pStrSid))
 	{
 		sSid = pStrSid;
-		LocalFree(pStrSid);
 		return true;
 	}
 	else
@@ -72,11 +74,10 @@ bool SecDescriptorToString(const PSECURITY_DESCRIPTOR pSD, string & sSDDL, strin
 	
 	SECURITY_INFORMATION si = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | LABEL_SECURITY_INFORMATION;
 
-	LPSTR pszSddl = NULL;
+	CLocalHeapPtr pszSddl;
 	if (ConvertSecurityDescriptorToStringSecurityDescriptorA(pSD, SDDL_REVISION_1, si, &pszSddl, NULL))
 	{
 		sSDDL = pszSddl;
-		LocalFree(pszSddl);
 		return true;
 	}
 	else
@@ -339,15 +340,13 @@ void EnumSessions()
 				break;
 			}
 			
-			LPSTR pInfo = NULL;
+			CHeapPtr<char, CWTSAllocator> pInfo;
 			DWORD dwBytesReturned = 0;
 			ret = WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, pSessInfo[ix].SessionId, WTSUserName, &pInfo, &dwBytesReturned);
 			if ( ret )
 			{
 				cout 
 					<< "        WTS User Name        : " << pInfo << endl;
-				WTSFreeMemory(pInfo);
-				pInfo = NULL;
 			}
 			else
 			{

@@ -24,6 +24,9 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 using namespace std;
 #include <tchar.h>
 #include <sddl.h>
+#include <atlbase.h>
+
+#include "helpers.h"
 
 #include "Formatting.h"
 
