@@ -11,9 +11,8 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 */
 
 #include "stdafx.h"
+#include "Helpers.h"
 
-using CLocalHeapPtr = CHeapPtr<char, CLocalAllocator>;
-using CWTSHeapPtr = CHeapPtr<char, CWTSAllocator>;
 
 bool bShowSD = true;
 
@@ -141,21 +140,20 @@ BOOL  __stdcall EnumDesktopProc(
 	UNREFERENCED_PARAMETER(lParam);
 	cout 
 		<< "       Desktop:  " << lpszDesktop << endl;
-	HDESK hDesk = OpenDesktop(lpszDesktop, 0, FALSE, MAXIMUM_ALLOWED);//GENERIC_READ);
-	if ( NULL == hDesk )
+	unique_hdesk hDesk{ OpenDesktop(lpszDesktop, 0, FALSE, MAXIMUM_ALLOWED) };//GENERIC_READ);
+	if ( !hDesk )
 	{
 		ShowError("\tOpenDesktop");
 	}
 	else
 	{
 		cout << "           SID:  ";
-		ShowObjectSid(hDesk);
+		ShowObjectSid(hDesk.get());
 		if (bShowSD)
 		{
 			cout << "            SD:  ";
-			ShowObjectSecurity(hDesk);
+			ShowObjectSecurity(hDesk.get());
 		}
-		CloseDesktop(hDesk);
 	}
 	cout << endl;
 	return TRUE;
@@ -170,36 +168,35 @@ BOOL  __stdcall EnumWindowStationProc(
 	UNREFERENCED_PARAMETER(lParam);
 	cout << endl <<
 		"    WinSta:  " << lpszWindowStation << endl;
-	HWINSTA hWS = OpenWindowStation(lpszWindowStation, FALSE, MAXIMUM_ALLOWED);
-	if ( NULL == hWS )
+	unique_hwinsta hWS{ OpenWindowStation(lpszWindowStation, FALSE, MAXIMUM_ALLOWED) };
+	if ( !hWS )
 	{
 		ShowError(); //"\tOpenWindowStation");
 	}
 	else
 	{
 		cout << "            ";
-		ShowObjectFlags(hWS);
+		ShowObjectFlags(hWS.get());
 		cout << "              SID:  ";
-		ShowObjectSid(hWS);
+		ShowObjectSid(hWS.get());
 		if (bShowSD)
 		{
 			cout << "               SD:  ";
-			ShowObjectSecurity(hWS);
+			ShowObjectSecurity(hWS.get());
 		}
 		cout << endl;
-		HWINSTA hWS_save = GetProcessWindowStation();
-		if ( SetProcessWindowStation(hWS) )
+		unique_hwinsta hWS_save{ GetProcessWindowStation() };
+		if ( SetProcessWindowStation(hWS.get()) )
 		{
-			BOOL bEDret = EnumDesktops(hWS, (DESKTOPENUMPROCA)EnumDesktopProc, 0);
+			BOOL bEDret = EnumDesktops(hWS.get(), (DESKTOPENUMPROCA)EnumDesktopProc, 0);
 			if ( ! bEDret )
 			{
 				ShowError("\tEnumDesktops");
 			}
-			SetProcessWindowStation(hWS_save);
+			SetProcessWindowStation(hWS_save.get());
 		}
 		else
 			ShowError("\tSetProcessWindowStation");
-		CloseWindowStation(hWS);
 	}
 
 	return TRUE;
@@ -231,11 +228,10 @@ void ShowCurrentWinStaDesktop()
 	}
 
 	cout << "    WinSta   " ;
-	HWINSTA hWS = GetProcessWindowStation();
+	unique_hwinsta hWS{ GetProcessWindowStation() };
 	if ( hWS )
 	{
-		ShowObjectName(hWS);
-		CloseWindowStation(hWS);
+		ShowObjectName(hWS.get());
 	}
 	else
 	{
@@ -243,11 +239,10 @@ void ShowCurrentWinStaDesktop()
 	}
 
 	cout << "    Desktop  ";
-	HDESK hDesk0 = GetThreadDesktop(GetCurrentThreadId());
+	unique_hdesk hDesk0{ GetThreadDesktop(GetCurrentThreadId()) };
 	if ( hDesk0 )
 	{
-		ShowObjectName(hDesk0);
-		CloseDesktop(hDesk0);
+		ShowObjectName(hDesk0.get());
 	}
 	else
 	{
@@ -256,11 +251,10 @@ void ShowCurrentWinStaDesktop()
 
 	cout << endl
 		<< "Current user input Desktop:  ";
-	HDESK hDesk1 = OpenInputDesktop(0, FALSE, MAXIMUM_ALLOWED);
+	unique_hdesk hDesk1{ OpenInputDesktop(0, FALSE, MAXIMUM_ALLOWED) };
 	if ( hDesk1 )
 	{
-		ShowObjectName(hDesk1);
-		CloseDesktop(hDesk1);
+		ShowObjectName(hDesk1.get());
 	}
 	else
 	{

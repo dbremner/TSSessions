@@ -26,7 +26,9 @@ using namespace std;
 #include <sddl.h>
 #include <atlbase.h>
 
-#include "helpers.h"
+//DX
+#include "handle.h"
+
 
 #include "Formatting.h"
 

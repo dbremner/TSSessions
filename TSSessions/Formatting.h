@@ -48,7 +48,7 @@ inline wostream& operator << ( wostream& os, const HEX & h )
 inline std::string SysErrorMessageWithCode()
 {
 	DWORD dwErrCode = GetLastError();
-	LPSTR pszErrMsg = NULL;
+	CLocalHeapPtr pszErrMsg;
 	std::stringstream sRetval;
 	DWORD flags =
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -69,7 +69,6 @@ inline std::string SysErrorMessageWithCode()
 		if ( string::npos != ixLast )
 			sErrMsg = sErrMsg.substr(0, ixLast + 1);
 		sRetval << sErrMsg << " (Error # " << dwErrCode << " = " << HEX(dwErrCode) << ")";
-		LocalFree(pszErrMsg);
 	}
 	else
 	{
