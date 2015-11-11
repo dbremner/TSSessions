@@ -6,16 +6,18 @@
 class CWTSAllocator
 {
 public:
-	_Ret_maybenull_ _Post_writable_byte_size_(nBytes) static void* Reallocate(
-		_In_ void* p,
-		_In_ size_t nBytes) throw()
+	_Ret_maybenull_ static void* Reallocate(
+		_In_ void* /*p*/,
+		_In_ size_t /*nBytes*/) throw()
 	{
-		return ATLASSERT(FALSE);
+		ATLASSERT(FALSE);
+		return nullptr;
 	}
 
-	_Ret_maybenull_ _Post_writable_byte_size_(nBytes) static void* Allocate(_In_ size_t nBytes) throw()
+	_Ret_maybenull_ static void* Allocate(_In_ size_t /*nBytes*/) throw()
 	{
-		return ATLASSERT(FALSE);
+		ATLASSERT(FALSE);
+		return nullptr;
 	}
 
 	static void Free(_In_ void* p) throw()
