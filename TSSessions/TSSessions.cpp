@@ -283,7 +283,7 @@ void EnumSessions()
 			<< endl;
 
 
-		HANDLE hToken = NULL;
+		unique_access_token hToken;
 
 		DWORD ConsoleSessId = WTSGetActiveConsoleSessionId();
 		cout << "    Console Session = ";
@@ -349,13 +349,13 @@ void EnumSessions()
 				cout << sysErrMsg << endl;
 			}
 
-			if ( WTSQueryUserToken(pSessInfo[ix].SessionId, &hToken) )
+			if ( WTSQueryUserToken(pSessInfo[ix].SessionId, hToken.get_address_of()) )
 			{
 				cout
 					<< "        Token Logon Session  : ";
 				TOKEN_STATISTICS tokStats = {0};
 				DWORD dwLen = sizeof(TOKEN_STATISTICS);
-				if (GetTokenInformation(hToken, TokenStatistics, (LPVOID)&tokStats, dwLen, &dwLen))
+				if (GetTokenInformation(hToken.get(), TokenStatistics, (LPVOID)&tokStats, dwLen, &dwLen))
 				{
 					cout << HEX(tokStats.AuthenticationId.HighPart, 8, false, false) << ":" << HEX(tokStats.AuthenticationId.LowPart, 8, false, false) << endl;
 				}
@@ -370,7 +370,7 @@ void EnumSessions()
 					<< "        Token Integrity Level: ";
 				DWORD dwLengthNeeded;
 				PTOKEN_MANDATORY_LABEL pTIL = (PTOKEN_MANDATORY_LABEL)alloca(2048); // 2048 should be way more than enough for IL
-				if (GetTokenInformation(hToken, TokenIntegrityLevel, pTIL, dwLengthNeeded, &dwLengthNeeded))
+				if (GetTokenInformation(hToken.get(), TokenIntegrityLevel, pTIL, dwLengthNeeded, &dwLengthNeeded))
 				{
 					DWORD dwIntegrityLevel = *GetSidSubAuthority(pTIL->Label.Sid, (DWORD)(UCHAR)(*GetSidSubAuthorityCount(pTIL->Label.Sid)-1));
 
@@ -425,8 +425,6 @@ void EnumSessions()
 					//cout << "GetTokenInformation failed:  " << sysErrMsg << endl;
 					cout << sysErrMsg << endl;
 				}
-
-				CloseHandle(hToken);
 			}
 			else
 			{

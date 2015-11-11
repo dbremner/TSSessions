@@ -61,5 +61,7 @@ struct hwinsta_traits
 
 };
 
+
 using unique_hdesk = KennyKerr::unique_handle<hdesk_traits>;
 using unique_hwinsta = KennyKerr::unique_handle<hwinsta_traits>;
+using unique_access_token = KennyKerr::unique_handle<KennyKerr::null_handle_traits>;

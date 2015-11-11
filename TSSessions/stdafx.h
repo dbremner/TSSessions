@@ -29,6 +29,7 @@ using namespace std;
 //DX
 #include "handle.h"
 
+#include "Helpers.h"
 
 #include "Formatting.h"
 
