@@ -26,36 +26,30 @@ public:
 	}
 };
 
-struct hdesk_traits
+template<class T>
+struct handle_base
 {
-	using pointer = HDESK;
-
-	static pointer invalid()
+	using pointer = T;
+	static auto invalid() -> pointer
 	{
 		return nullptr;
 	}
+};
 
+struct hdesk_traits : handle_base<HDESK>
+{
 	static void close(pointer ptr)
 	{
 		CloseDesktop(ptr);
 	}
-
 };
 
-struct hwinsta_traits
+struct hwinsta_traits : handle_base<HWINSTA>
 {
-	using pointer = HWINSTA;
-
-	static pointer invalid()
-	{
-		return nullptr;
-	}
-
 	static void close(pointer ptr)
 	{
 		CloseWindowStation(ptr);
 	}
-
 };
 
 
