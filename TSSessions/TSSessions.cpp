@@ -52,7 +52,7 @@ bool SidToString(const PSID pSid, string & sSid, string & sError)
 	sSid.clear();
 	sError.clear();
 
-	CLocalHeapPtr pStrSid;
+	CHeapPtr<char, CLocalAllocator> pStrSid;
 	if (ConvertSidToStringSidA(pSid, &pStrSid))
 	{
 		sSid = pStrSid;
@@ -73,7 +73,7 @@ bool SecDescriptorToString(const PSECURITY_DESCRIPTOR pSD, string & sSDDL, strin
 	
 	SECURITY_INFORMATION si = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | LABEL_SECURITY_INFORMATION;
 
-	CLocalHeapPtr pszSddl;
+	CHeapPtr<char, CLocalAllocator> pszSddl;
 	if (ConvertSecurityDescriptorToStringSecurityDescriptorA(pSD, SDDL_REVISION_1, si, &pszSddl, NULL))
 	{
 		sSDDL = pszSddl;

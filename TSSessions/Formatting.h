@@ -48,7 +48,7 @@ inline wostream& operator << ( wostream& os, const HEX & h )
 inline std::string SysErrorMessageWithCode()
 {
 	DWORD dwErrCode = GetLastError();
-	CLocalHeapPtr pszErrMsg;
+	CHeapPtr<char, CLocalAllocator> pszErrMsg;
 	std::stringstream sRetval;
 	DWORD flags =
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |

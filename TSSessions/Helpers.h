@@ -26,9 +26,6 @@ public:
 	}
 };
 
-using CLocalHeapPtr = CHeapPtr<char, CLocalAllocator>;
-using CWTSHeapPtr = CHeapPtr<char, CWTSAllocator>;
-
 struct hdesk_traits
 {
 	using pointer = HDESK;
