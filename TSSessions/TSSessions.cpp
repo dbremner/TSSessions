@@ -239,10 +239,11 @@ void ShowCurrentWinStaDesktop()
 	}
 
 	cout << "    Desktop  ";
-	unique_hdesk hDesk0{ GetThreadDesktop(GetCurrentThreadId()) };
+	//MSDN says not to close this one
+	HDESK hDesk0 = GetThreadDesktop(GetCurrentThreadId());
 	if ( hDesk0 )
 	{
-		ShowObjectName(hDesk0.get());
+		ShowObjectName(hDesk0);
 	}
 	else
 	{
