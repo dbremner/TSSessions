@@ -208,15 +208,15 @@ void ShowCurrentWinStaDesktop()
 	cout << "This process/thread running in:" << endl;
 
 	cout << "    Session  ";
-	HANDLE hToken = NULL;
-	if ( ! OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken) )
+	unique_htoken hToken;
+	if ( ! OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, hToken.get_address_of()) )
 	{
 		ShowError(); //"OpenProcessToken");
 	}
 	else
 	{
 		DWORD dwSessionID = 0, dwRetLen = 0;
-		if ( ! GetTokenInformation(hToken, TokenSessionId, &dwSessionID, sizeof(dwSessionID), &dwRetLen) )
+		if ( ! GetTokenInformation(hToken.get(), TokenSessionId, &dwSessionID, sizeof(dwSessionID), &dwRetLen) )
 		{
 			ShowError(); //"GetTokenInformation");
 		}
@@ -224,7 +224,6 @@ void ShowCurrentWinStaDesktop()
 		{
 			cout << dwSessionID << endl;
 		}
-		CloseHandle(hToken);
 	}
 
 	cout << "    WinSta   " ;
@@ -268,7 +267,7 @@ void ShowCurrentWinStaDesktop()
 
 void EnumSessions()
 {
-	PWTS_SESSION_INFOA pSessInfo = NULL;
+	CHeapPtr<WTS_SESSION_INFOA, CWTSAllocator> pSessInfo;
 	DWORD dwSessCount = 0;
 	BOOL ret = WTSEnumerateSessionsA(WTS_CURRENT_SERVER_HANDLE, 0, 1, &pSessInfo, &dwSessCount);
 	if ( ! ret )
