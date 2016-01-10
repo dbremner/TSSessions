@@ -165,8 +165,7 @@ BOOL  __stdcall EnumWindowStationProc(
 )
 {
 	UNREFERENCED_PARAMETER(lParam);
-	cout << "\n" <<
-		"    WinSta:  " << lpszWindowStation << "\n";
+	cout << "\n    WinSta:  " << lpszWindowStation << "\n";
 	unique_hwinsta hWS{ OpenWindowStation(lpszWindowStation, FALSE, MAXIMUM_ALLOWED) };
 	if ( !hWS )
 	{
@@ -204,9 +203,8 @@ BOOL  __stdcall EnumWindowStationProc(
 
 void ShowCurrentWinStaDesktop()
 {
-	cout << "This process/thread running in:\n";
-
-	cout << "    Session  ";
+	cout << "This process/thread running in:\n"\
+		"    Session  ";
 	unique_htoken hToken;
 	if ( ! OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, hToken.get_address_of()) )
 	{
@@ -248,8 +246,7 @@ void ShowCurrentWinStaDesktop()
 		ShowError(); //"GetThreadDesktop");
 	}
 
-	cout << "\n"
-		<< "Current user input Desktop:  ";
+	cout << "\nCurrent user input Desktop:  ";
 	unique_hdesk hDesk1{ OpenInputDesktop(0, FALSE, MAXIMUM_ALLOWED) };
 	if ( hDesk1 )
 	{
@@ -277,9 +274,7 @@ void EnumSessions()
 	}
 	else
 	{
-		cout 
-			<< "Terminal Sessions:  " << dwSessCount << "\n"
-			<< "\n";
+		cout << "Terminal Sessions:  " << dwSessCount << "\n\n";
 
 
 		unique_access_token hToken;
@@ -296,8 +291,7 @@ void EnumSessions()
 			cout 
 				<< "    Session ID: " << pSessInfo[ix].SessionId << "\n"
 				<< "        Window Station Name  : " << pSessInfo[ix].pWinStationName << "\n";
-			cout
-				<< "        State                : ";
+			cout << "        State                : ";
 			switch( pSessInfo[ix].State )
 			{
 			case WTSActive:
@@ -364,8 +358,7 @@ void EnumSessions()
 					cout << sysErrMsg << "\n";
 				}
 
-				cout
-					<< "        Token Integrity Level: ";
+				cout << "        Token Integrity Level: ";
 				DWORD dwLengthNeeded;
 				PTOKEN_MANDATORY_LABEL pTIL = (PTOKEN_MANDATORY_LABEL)alloca(2048); // 2048 should be way more than enough for IL
 				if (GetTokenInformation(hToken.get(), TokenIntegrityLevel, pTIL, dwLengthNeeded, &dwLengthNeeded))
@@ -433,8 +426,7 @@ void EnumSessions()
 					// No output
 					break;
 				case ERROR_NO_TOKEN:
-				cout
-					<< "        No Token";
+				cout << "        No Token";
 					break;
 				default:
 					//cout 
@@ -453,8 +445,8 @@ void EnumSessions()
 void Usage()
 {
 	cout
-		<< "Usage:\n"
-		<< "TSSessions [-NoSD]\n";
+		<< "Usage:\n"\
+		"TSSessions [-NoSD]\n";
 	exit(1);
 }
 
@@ -474,8 +466,7 @@ void main(int argc, char** argv)
 
 	EnumSessions();
 
-	cout << "\n"
-		<< "Window stations in the current session:\n";
+	cout << "\nWindow stations in the current session:\n";
 	if ( ! EnumWindowStations(EnumWindowStationProc, 0) )
 	{
 		ShowError("EnumWindowStations");
