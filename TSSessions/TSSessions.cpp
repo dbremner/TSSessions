@@ -73,7 +73,7 @@ bool SecDescriptorToString(const PSECURITY_DESCRIPTOR pSD, string & sSDDL, strin
 	SECURITY_INFORMATION si = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | LABEL_SECURITY_INFORMATION;
 
 	CHeapPtr<char, CLocalAllocator> pszSddl;
-	if (ConvertSecurityDescriptorToStringSecurityDescriptorA(pSD, SDDL_REVISION_1, si, &pszSddl, NULL))
+	if (ConvertSecurityDescriptorToStringSecurityDescriptorA(pSD, SDDL_REVISION_1, si, &pszSddl, nullptr))
 	{
 		sSDDL = pszSddl;
 		return true;

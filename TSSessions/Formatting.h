@@ -77,7 +77,7 @@ inline std::string SysErrorMessageWithCode()
 	return sRetval.str();
 }
 
-inline void ShowError(LPCSTR sContext = NULL)
+inline void ShowError(LPCSTR sContext = nullptr)
 {
 	string sysErrMsg = SysErrorMessageWithCode();
 	if (sContext && *sContext)
