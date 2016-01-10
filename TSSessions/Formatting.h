@@ -81,7 +81,7 @@ inline void ShowError(LPCTSTR sContext = nullptr)
 {
 	tstring sysErrMsg = SysErrorMessageWithCode();
 	if (sContext && *sContext)
-		cout << sContext << " error, " << sysErrMsg << "\n";
+		_tprintf("%s error, %s\n", sContext, sysErrMsg.c_str() );
 	else
-		cout << sysErrMsg << "\n";
+		_tprintf("%s\n", sysErrMsg.c_str() );
 }
