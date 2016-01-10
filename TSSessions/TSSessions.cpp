@@ -132,7 +132,7 @@ void ShowObjectSecurity(HANDLE hObj)
 
 
 BOOL  __stdcall EnumDesktopProc(
-   LPSTR lpszDesktop,
+   LPTSTR lpszDesktop,
    LPARAM lParam
 )
 {
@@ -159,7 +159,7 @@ BOOL  __stdcall EnumDesktopProc(
 
 
 BOOL  __stdcall EnumWindowStationProc(
-   LPSTR lpszWindowStation,
+   LPTSTR lpszWindowStation,
    LPARAM lParam
 )
 {
@@ -262,7 +262,7 @@ void ShowCurrentWinStaDesktop()
 
 void EnumSessions()
 {
-	CHeapPtr<WTS_SESSION_INFOA, CWTSAllocator> pSessInfo;
+	CHeapPtr<WTS_SESSION_INFO, CWTSAllocator> pSessInfo;
 	DWORD dwSessCount = 0;
 	BOOL ret = WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &pSessInfo, &dwSessCount);
 	if ( ! ret )
