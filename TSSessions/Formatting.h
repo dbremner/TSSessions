@@ -13,7 +13,7 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 // Structure and operator to insert a zero-filled hex-formatted number into a stream.
 struct HEX
 {
-	HEX(unsigned long num, bool bLeading0x = true)
+	HEX(unsigned long num, bool bLeading0x)
 		: m_num(num), m_bLeading0x(bLeading0x)
 	{}
 
@@ -73,11 +73,11 @@ inline tstring SysErrorMessageWithCode()
 		size_t ixLast = sErrMsg.find_last_not_of("\r\n");
 		if ( tstring::npos != ixLast )
 			sErrMsg = sErrMsg.substr(0, ixLast + 1);
-		sRetval << sErrMsg << " (Error # " << dwErrCode << " = " << HEX(dwErrCode) << ")";
+		sRetval << sErrMsg << " (Error # " << dwErrCode << " = " << HEX(dwErrCode, true) << ")";
 	}
 	else
 	{
-		sRetval << "Error # " << dwErrCode << " (" << HEX(dwErrCode) << ")";
+		sRetval << "Error # " << dwErrCode << " (" << HEX(dwErrCode, true) << ")";
 	}
 	return sRetval.str();
 }

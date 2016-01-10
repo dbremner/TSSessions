@@ -42,7 +42,7 @@ void ShowObjectFlags(HANDLE hObj)
 	}
 	else
 	{
-		cout << HEX(uoFlags.dwFlags) << "\n";
+		cout << HEX(uoFlags.dwFlags, true) << "\n";
 	}
 }
 
