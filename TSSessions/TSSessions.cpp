@@ -34,8 +34,7 @@ void ShowObjectName(HANDLE hObj)
 void ShowObjectFlags(HANDLE hObj)
 {
 	cout << "Flags:  ";
-	USEROBJECTFLAGS uoFlags;
-	SecureZeroMemory(&uoFlags, sizeof(uoFlags));
+	USEROBJECTFLAGS uoFlags{};
 	DWORD nLenNeeded = 0;
 	if ( !GetUserObjectInformation(hObj, UOI_FLAGS, &uoFlags, sizeof(uoFlags), &nLenNeeded) )
 	{
