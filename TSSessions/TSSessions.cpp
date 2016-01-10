@@ -285,6 +285,8 @@ void EnumSessions()
 		else
 			_tprintf("%d\n\n", ConsoleSessId);
 
+		CHeapPtr<TOKEN_MANDATORY_LABEL> blob;
+		blob.AllocateBytes(2048);
 		for ( DWORD ix = 0; ix < dwSessCount ; ++ix )
 		{
 			_tprintf("    Session ID: %d\n", pSessInfo[ix].SessionId);
@@ -356,7 +358,7 @@ void EnumSessions()
 
 				_tprintf("        Token Integrity Level: ");
 				DWORD dwLengthNeeded;
-				PTOKEN_MANDATORY_LABEL pTIL = (PTOKEN_MANDATORY_LABEL)alloca(2048); // 2048 should be way more than enough for IL
+				PTOKEN_MANDATORY_LABEL pTIL = blob; // 2048 should be way more than enough for IL
 				if (GetTokenInformation(hToken.get(), TokenIntegrityLevel, pTIL, dwLengthNeeded, &dwLengthNeeded))
 				{
 					DWORD dwIntegrityLevel = *GetSidSubAuthority(pTIL->Label.Sid, (DWORD)(UCHAR)(*GetSidSubAuthorityCount(pTIL->Label.Sid)-1));
