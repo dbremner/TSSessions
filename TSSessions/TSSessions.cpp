@@ -46,13 +46,13 @@ void ShowObjectFlags(HANDLE hObj)
 	}
 }
 
-bool SidToString(const PSID pSid, string & sSid, string & sError)
+bool SidToString(const PSID pSid, tstring & sSid, tstring & sError)
 {
 	sSid.clear();
 	sError.clear();
 
-	CHeapPtr<char, CLocalAllocator> pStrSid;
-	if (ConvertSidToStringSidA(pSid, &pStrSid))
+	CHeapPtr<TCHAR, CLocalAllocator> pStrSid;
+	if (ConvertSidToStringSid(pSid, &pStrSid))
 	{
 		sSid = pStrSid;
 		return true;
@@ -65,22 +65,22 @@ bool SidToString(const PSID pSid, string & sSid, string & sError)
 	}
 }
 
-bool SecDescriptorToString(const PSECURITY_DESCRIPTOR pSD, string & sSDDL, string & sError)
+bool SecDescriptorToString(const PSECURITY_DESCRIPTOR pSD, tstring & sSDDL, tstring & sError)
 {
 	sSDDL.clear();
 	sError.clear();
 	
 	SECURITY_INFORMATION si = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | LABEL_SECURITY_INFORMATION;
 
-	CHeapPtr<char, CLocalAllocator> pszSddl;
-	if (ConvertSecurityDescriptorToStringSecurityDescriptorA(pSD, SDDL_REVISION_1, si, &pszSddl, nullptr))
+	CHeapPtr<TCHAR, CLocalAllocator> pszSddl;
+	if (ConvertSecurityDescriptorToStringSecurityDescriptor(pSD, SDDL_REVISION_1, si, &pszSddl, nullptr))
 	{
 		sSDDL = pszSddl;
 		return true;
 	}
 	else
 	{
-		//sError = "ConvertSecurityDescriptorToStringSecurityDescriptorA error: " + SysErrorMessageWithCode();
+		//sError = "ConvertSecurityDescriptorToStringSecurityDescriptor error: " + SysErrorMessageWithCode();
 		sError = SysErrorMessageWithCode();
 		return false;
 	}
@@ -101,8 +101,8 @@ void ShowObjectSid(HANDLE hObj)
 	}
 	else
 	{
-		string sSid, sError;
-		if (SidToString(PSID(buf), sSid, sError))
+		tstring sSid, sError;
+		if (SidToString((PSID)buf, sSid, sError))
 			cout << sSid << "\n";
 		else
 			cout << sError << "\n";
@@ -265,11 +265,11 @@ void EnumSessions()
 {
 	CHeapPtr<WTS_SESSION_INFOA, CWTSAllocator> pSessInfo;
 	DWORD dwSessCount = 0;
-	BOOL ret = WTSEnumerateSessionsA(WTS_CURRENT_SERVER_HANDLE, 0, 1, &pSessInfo, &dwSessCount);
+	BOOL ret = WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &pSessInfo, &dwSessCount);
 	if ( ! ret )
 	{
-		string sysErrMsg = SysErrorMessageWithCode();
-		//cout << "WTSEnumerateSessionsA failed:  " << sysErrMsg << "\n";
+		tstring sysErrMsg = SysErrorMessageWithCode();
+		//cout << "WTSEnumerateSessions failed:  " << sysErrMsg << "\n";
 		cout << sysErrMsg << "\n";
 	}
 	else
@@ -326,9 +326,9 @@ void EnumSessions()
 				break;
 			}
 			
-			CHeapPtr<char, CWTSAllocator> pInfo;
+			CHeapPtr<TCHAR, CWTSAllocator> pInfo;
 			DWORD dwBytesReturned = 0;
-			ret = WTSQuerySessionInformationA(WTS_CURRENT_SERVER_HANDLE, pSessInfo[ix].SessionId, WTSUserName, &pInfo, &dwBytesReturned);
+			ret = WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, pSessInfo[ix].SessionId, WTSUserName, &pInfo, &dwBytesReturned);
 			if ( ret )
 			{
 				cout 
@@ -336,8 +336,8 @@ void EnumSessions()
 			}
 			else
 			{
-				string sysErrMsg = SysErrorMessageWithCode();
-				//cout << "WTSQuerySessionInformationA failed:  " << sysErrMsg << "\n";
+				tstring sysErrMsg = SysErrorMessageWithCode();
+				//cout << "WTSQuerySessionInformation failed:  " << sysErrMsg << "\n";
 				cout << sysErrMsg << "\n";
 			}
 
@@ -353,7 +353,7 @@ void EnumSessions()
 				}
 				else
 				{
-					string sysErrMsg = SysErrorMessageWithCode();
+					tstring sysErrMsg = SysErrorMessageWithCode();
 					//cout << "GetTokenInformation failed:  " << sysErrMsg << "\n";
 					cout << sysErrMsg << "\n";
 				}
@@ -412,7 +412,7 @@ void EnumSessions()
 				}
 				else
 				{
-					string sysErrMsg = SysErrorMessageWithCode();
+					tstring sysErrMsg = SysErrorMessageWithCode();
 					//cout << "GetTokenInformation failed:  " << sysErrMsg << "\n";
 					cout << sysErrMsg << "\n";
 				}

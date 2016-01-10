@@ -15,6 +15,7 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 #define _WIN32_WINNT 0x0501
 #include "targetver.h"
 #include <windows.h>
+#include <tchar.h>
 #include <wtsapi32.h>
 #pragma comment(lib, "wtsapi32.lib")
 #include <iostream>
@@ -25,6 +26,8 @@ using namespace std;
 #include <tchar.h>
 #include <sddl.h>
 #include <atlbase.h>
+
+#include "tstring.h"
 
 //DX
 #include "handle.h"

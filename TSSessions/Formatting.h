@@ -45,17 +45,17 @@ inline wostream& operator << ( wostream& os, const HEX & h )
 
 
 
-inline std::string SysErrorMessageWithCode()
+inline tstring SysErrorMessageWithCode()
 {
 	DWORD dwErrCode = GetLastError();
-	CHeapPtr<char, CLocalAllocator> pszErrMsg;
+	CHeapPtr<TCHAR, CLocalAllocator> pszErrMsg;
 	std::stringstream sRetval;
 	DWORD flags =
 		FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		FORMAT_MESSAGE_IGNORE_INSERTS |
 		FORMAT_MESSAGE_FROM_SYSTEM ;
 
-	if ( FormatMessageA(
+	if ( FormatMessage(
 		flags,
 		NULL, 
 		dwErrCode,
@@ -64,9 +64,9 @@ inline std::string SysErrorMessageWithCode()
 		0,
 		NULL ) )
 	{
-		string sErrMsg = pszErrMsg;
+		tstring sErrMsg = pszErrMsg;
 		size_t ixLast = sErrMsg.find_last_not_of("\r\n");
-		if ( string::npos != ixLast )
+		if ( tstring::npos != ixLast )
 			sErrMsg = sErrMsg.substr(0, ixLast + 1);
 		sRetval << sErrMsg << " (Error # " << dwErrCode << " = " << HEX(dwErrCode) << ")";
 	}
@@ -77,9 +77,9 @@ inline std::string SysErrorMessageWithCode()
 	return sRetval.str();
 }
 
-inline void ShowError(LPCSTR sContext = nullptr)
+inline void ShowError(LPCTSTR sContext = nullptr)
 {
-	string sysErrMsg = SysErrorMessageWithCode();
+	tstring sysErrMsg = SysErrorMessageWithCode();
 	if (sContext && *sContext)
 		cout << sContext << " error, " << sysErrMsg << "\n";
 	else
