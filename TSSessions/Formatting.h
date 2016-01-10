@@ -81,7 +81,7 @@ inline void ShowError(LPCSTR sContext = NULL)
 {
 	string sysErrMsg = SysErrorMessageWithCode();
 	if (sContext && *sContext)
-		cout << sContext << " error, " << sysErrMsg << endl;
+		cout << sContext << " error, " << sysErrMsg << "\n";
 	else
-		cout << sysErrMsg << endl;
+		cout << sysErrMsg << "\n";
 }

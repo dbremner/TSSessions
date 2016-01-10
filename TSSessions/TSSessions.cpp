@@ -27,7 +27,7 @@ void ShowObjectName(HANDLE hObj)
 	}
 	else
 	{
-		cout << sObjName << endl;
+		cout << sObjName << "\n";
 	}
 }
 
@@ -42,7 +42,7 @@ void ShowObjectFlags(HANDLE hObj)
 	}
 	else
 	{
-		cout << HEX(uoFlags.dwFlags) << endl;
+		cout << HEX(uoFlags.dwFlags) << "\n";
 	}
 }
 
@@ -97,15 +97,15 @@ void ShowObjectSid(HANDLE hObj)
 	}
 	else if (0 == nLenNeeded )
 	{
-		cout << "(No user)" << endl;
+		cout << "(No user)\n";
 	}
 	else
 	{
 		string sSid, sError;
 		if (SidToString(PSID(buf), sSid, sError))
-			cout << sSid << endl;
+			cout << sSid << "\n";
 		else
-			cout << sError << endl;
+			cout << sError << "\n";
 	}
 }
 
@@ -119,15 +119,15 @@ void ShowObjectSecurity(HANDLE hObj)
 	{
 		string sSDDL, sError;
 		if (SecDescriptorToString(pSD, sSDDL, sError))
-			cout << sSDDL << endl;
+			cout << sSDDL << "\n";
 		else
-			cout << sError << endl;
+			cout << sError << "\n";
 	}
 	else
 	{
 		ShowError(); //"GetUserObjectSecurity");
 	}
-	cout << endl;
+	cout << "\n";
 }
 
 
@@ -138,7 +138,7 @@ BOOL  __stdcall EnumDesktopProc(
 {
 	UNREFERENCED_PARAMETER(lParam);
 	cout 
-		<< "       Desktop:  " << lpszDesktop << endl;
+		<< "       Desktop:  " << lpszDesktop << "\n";
 	unique_hdesk hDesk{ OpenDesktop(lpszDesktop, 0, FALSE, MAXIMUM_ALLOWED) };//GENERIC_READ);
 	if ( !hDesk )
 	{
@@ -154,7 +154,7 @@ BOOL  __stdcall EnumDesktopProc(
 			ShowObjectSecurity(hDesk.get());
 		}
 	}
-	cout << endl;
+	cout << "\n";
 	return TRUE;
 }
 
@@ -165,8 +165,8 @@ BOOL  __stdcall EnumWindowStationProc(
 )
 {
 	UNREFERENCED_PARAMETER(lParam);
-	cout << endl <<
-		"    WinSta:  " << lpszWindowStation << endl;
+	cout << "\n" <<
+		"    WinSta:  " << lpszWindowStation << "\n";
 	unique_hwinsta hWS{ OpenWindowStation(lpszWindowStation, FALSE, MAXIMUM_ALLOWED) };
 	if ( !hWS )
 	{
@@ -183,7 +183,7 @@ BOOL  __stdcall EnumWindowStationProc(
 			cout << "               SD:  ";
 			ShowObjectSecurity(hWS.get());
 		}
-		cout << endl;
+		cout << "\n";
 		unique_hwinsta hWS_save{ GetProcessWindowStation() };
 		if ( SetProcessWindowStation(hWS.get()) )
 		{
@@ -204,7 +204,7 @@ BOOL  __stdcall EnumWindowStationProc(
 
 void ShowCurrentWinStaDesktop()
 {
-	cout << "This process/thread running in:" << endl;
+	cout << "This process/thread running in:\n";
 
 	cout << "    Session  ";
 	unique_htoken hToken;
@@ -221,7 +221,7 @@ void ShowCurrentWinStaDesktop()
 		}
 		else
 		{
-			cout << dwSessionID << endl;
+			cout << dwSessionID << "\n";
 		}
 	}
 
@@ -248,7 +248,7 @@ void ShowCurrentWinStaDesktop()
 		ShowError(); //"GetThreadDesktop");
 	}
 
-	cout << endl
+	cout << "\n"
 		<< "Current user input Desktop:  ";
 	unique_hdesk hDesk1{ OpenInputDesktop(0, FALSE, MAXIMUM_ALLOWED) };
 	if ( hDesk1 )
@@ -260,7 +260,7 @@ void ShowCurrentWinStaDesktop()
 		ShowError(); //"OpenInputDesktop");
 	}
 
-	cout << endl;
+	cout << "\n";
 }
 
 
@@ -272,14 +272,14 @@ void EnumSessions()
 	if ( ! ret )
 	{
 		string sysErrMsg = SysErrorMessageWithCode();
-		//cout << "WTSEnumerateSessionsA failed:  " << sysErrMsg << endl;
-		cout << sysErrMsg << endl;
+		//cout << "WTSEnumerateSessionsA failed:  " << sysErrMsg << "\n";
+		cout << sysErrMsg << "\n";
 	}
 	else
 	{
 		cout 
-			<< "Terminal Sessions:  " << dwSessCount << endl
-			<< endl;
+			<< "Terminal Sessions:  " << dwSessCount << "\n"
+			<< "\n";
 
 
 		unique_access_token hToken;
@@ -287,49 +287,48 @@ void EnumSessions()
 		DWORD ConsoleSessId = WTSGetActiveConsoleSessionId();
 		cout << "    Console Session = ";
 		if ( 0xFFFFFFFF == ConsoleSessId )
-			cout << "(transition)" << endl << endl;
+			cout << "(transition)" << "\n\n";
 		else
-			cout << ConsoleSessId << endl << endl;
-
+			cout << ConsoleSessId << "\n\n";
 
 		for ( DWORD ix = 0; ix < dwSessCount ; ++ix )
 		{
 			cout 
-				<< "    Session ID: " << pSessInfo[ix].SessionId << endl
-				<< "        Window Station Name  : " << pSessInfo[ix].pWinStationName << endl;
+				<< "    Session ID: " << pSessInfo[ix].SessionId << "\n"
+				<< "        Window Station Name  : " << pSessInfo[ix].pWinStationName << "\n";
 			cout
 				<< "        State                : ";
 			switch( pSessInfo[ix].State )
 			{
 			case WTSActive:
-				cout << "Active" << endl;
+				cout << "Active\n";
 				break;
 			case WTSConnected:
-				cout << "Connected" << endl;
+				cout << "Connected\n";
 				break;
 			case WTSConnectQuery:
-				cout << "ConnectQuery" << endl;
+				cout << "ConnectQuery\n";
 				break;
 			case WTSShadow:
-				cout << "Shadow" << endl;
+				cout << "Shadow\n";
 				break;
 			case WTSDisconnected:
-				cout << "Disconnected" << endl;
+				cout << "Disconnected\n";
 				break;
 			case WTSIdle:
-				cout << "Idle" << endl;
+				cout << "Idle\n";
 				break;
 			case WTSListen:
-				cout << "Listen" << endl;
+				cout << "Listen\n";
 				break;
 			case WTSReset:
-				cout << "Reset" << endl;
+				cout << "Reset\n";
 				break;
 			case WTSDown:
-				cout << "Down" << endl;
+				cout << "Down\n";
 				break;
 			case WTSInit:
-				cout << "Init" << endl;
+				cout << "Init\n";
 				break;
 			}
 			
@@ -339,13 +338,13 @@ void EnumSessions()
 			if ( ret )
 			{
 				cout 
-					<< "        WTS User Name        : " << pInfo << endl;
+					<< "        WTS User Name        : " << pInfo << "\n";
 			}
 			else
 			{
 				string sysErrMsg = SysErrorMessageWithCode();
-				//cout << "WTSQuerySessionInformationA failed:  " << sysErrMsg << endl;
-				cout << sysErrMsg << endl;
+				//cout << "WTSQuerySessionInformationA failed:  " << sysErrMsg << "\n";
+				cout << sysErrMsg << "\n";
 			}
 
 			if ( WTSQueryUserToken(pSessInfo[ix].SessionId, hToken.get_address_of()) )
@@ -356,13 +355,13 @@ void EnumSessions()
 				DWORD dwLen = sizeof(TOKEN_STATISTICS);
 				if (GetTokenInformation(hToken.get(), TokenStatistics, (LPVOID)&tokStats, dwLen, &dwLen))
 				{
-					cout << HEX(tokStats.AuthenticationId.HighPart, 8, false, false) << ":" << HEX(tokStats.AuthenticationId.LowPart, 8, false, false) << endl;
+					cout << HEX(tokStats.AuthenticationId.HighPart, 8, false, false) << ":" << HEX(tokStats.AuthenticationId.LowPart, 8, false, false) << "\n";
 				}
 				else
 				{
 					string sysErrMsg = SysErrorMessageWithCode();
-					//cout << "GetTokenInformation failed:  " << sysErrMsg << endl;
-					cout << sysErrMsg << endl;
+					//cout << "GetTokenInformation failed:  " << sysErrMsg << "\n";
+					cout << sysErrMsg << "\n";
 				}
 
 				cout
@@ -416,13 +415,13 @@ void EnumSessions()
 							cout << " > ProtectedProcess";	
 						break;
 					}
-					cout << endl;
+					cout << "\n";
 				}
 				else
 				{
 					string sysErrMsg = SysErrorMessageWithCode();
-					//cout << "GetTokenInformation failed:  " << sysErrMsg << endl;
-					cout << sysErrMsg << endl;
+					//cout << "GetTokenInformation failed:  " << sysErrMsg << "\n";
+					cout << sysErrMsg << "\n";
 				}
 			}
 			else
@@ -439,14 +438,13 @@ void EnumSessions()
 					break;
 				default:
 					//cout 
-					//	<< "   WTSQueryUserToken failed: " << sysErrMsg << endl;
+					//	<< "   WTSQueryUserToken failed: " << sysErrMsg << "\n";
 					break;
 				}
 			}
 
-			cout << endl;
+			cout << "\n";
 		}
-		WTSFreeMemory(pSessInfo);
 	}
 }
 
@@ -455,8 +453,8 @@ void EnumSessions()
 void Usage()
 {
 	cout
-		<< "Usage:" << endl
-		<< "TSSessions [-NoSD]" << endl;
+		<< "Usage:\n"
+		<< "TSSessions [-NoSD]\n";
 	exit(1);
 }
 
@@ -476,13 +474,13 @@ void main(int argc, char** argv)
 
 	EnumSessions();
 
-	cout << endl
-		<< "Window stations in the current session:" << endl;
+	cout << "\n"
+		<< "Window stations in the current session:\n";
 	if ( ! EnumWindowStations(EnumWindowStationProc, 0) )
 	{
 		ShowError("EnumWindowStations");
 	}
 
-	cout << endl;
+	cout << "\n";
 
 }
