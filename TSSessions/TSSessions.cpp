@@ -345,7 +345,7 @@ void EnumSessions()
 				DWORD dwLen = sizeof(TOKEN_STATISTICS);
 				if (GetTokenInformation(hToken.get(), TokenStatistics, (LPVOID)&tokStats, dwLen, &dwLen))
 				{
-					cout << HEX(tokStats.AuthenticationId.HighPart, 8, false, false) << ":" << HEX(tokStats.AuthenticationId.LowPart, 8, false, false) << "\n";
+					cout << HEX(tokStats.AuthenticationId.HighPart, false) << ":" << HEX(tokStats.AuthenticationId.LowPart, false) << "\n";
 				}
 				else
 				{

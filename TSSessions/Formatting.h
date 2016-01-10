@@ -13,13 +13,12 @@ Copyright (C) 2007-2012.  Microsoft Corporation.  All rights reserved.
 // Structure and operator to insert a zero-filled hex-formatted number into a stream.
 struct HEX
 {
-	HEX(unsigned long num, unsigned long fieldwidth = 8, bool bUpcase = false, bool bLeading0x = true)
-		: m_num(num), m_width(fieldwidth), m_upcase(bUpcase), m_bLeading0x(bLeading0x)
-		{}
+	HEX(unsigned long num, bool bLeading0x = true)
+		: m_num(num), m_bLeading0x(bLeading0x)
+	{}
 
 	unsigned long m_num;
-	unsigned long m_width;
-	bool m_upcase;
+	std::streamsize m_width = 8;
 	bool m_bLeading0x;
 };
 
@@ -27,7 +26,10 @@ inline ostream& operator << ( ostream& os, const HEX & h )
 {
 	int fmt = os.flags();
 	char fillchar = os.fill('0');
-	os << (h.m_bLeading0x ? "0x" : "") << hex << (h.m_upcase ? uppercase : nouppercase) << setw(h.m_width) << h.m_num ;
+	if (h.m_bLeading0x)
+		os << "0x" << hex << nouppercase << setw(h.m_width) << h.m_num;
+	else
+		os << "" << hex << nouppercase << setw(h.m_width) << h.m_num;
 	os.fill(fillchar);
 	os.flags(fmt);
 	return os;
@@ -37,7 +39,10 @@ inline wostream& operator << ( wostream& os, const HEX & h )
 {
 	int fmt = os.flags();
 	wchar_t fillchar = os.fill(L'0');
-	os << (h.m_bLeading0x ? L"0x" : L"") << hex << (h.m_upcase ? uppercase : nouppercase) << setw(h.m_width) << h.m_num ;
+	if (h.m_bLeading0x) 
+		os << L"0x" << hex << nouppercase << setw(h.m_width) << h.m_num ;
+	else 
+		os << L"" << hex << nouppercase << setw(h.m_width) << h.m_num ;
 	os.fill(fillchar);
 	os.flags(fmt);
 	return os;
