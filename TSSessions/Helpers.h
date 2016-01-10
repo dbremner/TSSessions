@@ -26,17 +26,17 @@ public:
 	}
 };
 
-template<class T>
-struct handle_base
+template<class T, T InvalidValue=nullptr>
+struct handle_traits_base
 {
 	using pointer = T;
 	inline static pointer invalid() noexcept
 	{
-		return nullptr;
+		return InvalidValue;
 	}
 };
 
-struct hdesk_traits : handle_base<HDESK>
+struct hdesk_traits : handle_traits_base<HDESK>
 {
 	static void close(pointer ptr) noexcept
 	{
@@ -44,7 +44,7 @@ struct hdesk_traits : handle_base<HDESK>
 	}
 };
 
-struct hwinsta_traits : handle_base<HWINSTA>
+struct hwinsta_traits : handle_traits_base<HWINSTA>
 {
 	static void close(pointer ptr) noexcept
 	{
