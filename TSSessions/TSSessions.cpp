@@ -21,7 +21,7 @@ void ShowObjectName(HANDLE hObj)
 {
 	char sObjName[2048];
 	DWORD nLenNeeded = 0;
-	if ( !GetUserObjectInformation(hObj, UOI_NAME, PVOID(sObjName), 2048, &nLenNeeded) )
+	if ( !GetUserObjectInformation(hObj, UOI_NAME, (PVOID)sObjName, 2048, &nLenNeeded) )
 	{
 		ShowError(); //"GetUserObjectInformation (UOI_NAME)");
 	}
@@ -91,7 +91,7 @@ void ShowObjectSid(HANDLE hObj)
 {
 	BYTE buf[2048];
 	DWORD nLenNeeded = 0 ;
-	if ( !GetUserObjectInformation(hObj, UOI_USER_SID, PVOID(buf), 2048, &nLenNeeded ) )
+	if ( !GetUserObjectInformation(hObj, UOI_USER_SID, (PVOID)buf, 2048, &nLenNeeded ) )
 	{
 		ShowError(); //"GetUserObjectInformation (UOI_USER_SID)");
 	}
@@ -112,7 +112,7 @@ void ShowObjectSid(HANDLE hObj)
 void ShowObjectSecurity(HANDLE hObj)
 {
 	BYTE buf[4096];
-	PSECURITY_DESCRIPTOR pSD = PSECURITY_DESCRIPTOR(buf);
+	PSECURITY_DESCRIPTOR pSD = (PSECURITY_DESCRIPTOR)buf;
 	DWORD nLenNeeded = 0;
 	SECURITY_INFORMATION si = OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION | LABEL_SECURITY_INFORMATION;
 	if (GetUserObjectSecurity(hObj, &si, pSD, 4096, &nLenNeeded))
