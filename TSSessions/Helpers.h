@@ -20,7 +20,7 @@ public:
 		return nullptr;
 	}
 
-	static void Free(_In_ void* p) noexcept
+	static void Free(_In_ void* p) //noexcept
 	{
 		WTSFreeMemory(p);
 	}
@@ -30,7 +30,7 @@ template<class T, T InvalidValue=nullptr>
 struct handle_traits_base
 {
 	using pointer = T;
-	inline static pointer invalid() noexcept
+	inline static pointer invalid() // noexcept
 	{
 		return InvalidValue;
 	}
@@ -38,7 +38,7 @@ struct handle_traits_base
 
 struct hdesk_traits : handle_traits_base<HDESK>
 {
-	static void close(pointer ptr) noexcept
+	static void close(pointer ptr) //noexcept
 	{
 		CloseDesktop(ptr);
 	}
@@ -46,7 +46,7 @@ struct hdesk_traits : handle_traits_base<HDESK>
 
 struct hwinsta_traits : handle_traits_base<HWINSTA>
 {
-	static void close(pointer ptr) noexcept
+	static void close(pointer ptr) //noexcept
 	{
 		CloseWindowStation(ptr);
 	}
